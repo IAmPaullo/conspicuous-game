@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -41,5 +42,9 @@ public class Card : MonoBehaviour
 
     }
 
-
+    public void FlipCard()
+    {
+        int dir = isFlipped ? 1 : -1;
+        AnimationHandler.FlipHorizontal(transform, dir, 0.5f);
+    }
 }

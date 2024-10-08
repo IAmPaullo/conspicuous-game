@@ -1,6 +1,4 @@
 using System.Collections.Generic;
-using System.Diagnostics.Tracing;
-using System.Runtime.InteropServices.WindowsRuntime;
 using UnityEngine;
 using UnityEngine.UI;
 public class BoardController : MonoBehaviour
@@ -34,11 +32,9 @@ public class BoardController : MonoBehaviour
         gridLayout.constraintCount = columns;
         FillCards(rows, columns);
     }
-
     private void FillCards(int rows, int columns)
     {
         int cardIndex;
-        //List<Card> cards = new();
         for (int i = 0; i < rows * columns; i++)
         {
             cardIndex = SelectNewCardIndex();
@@ -54,9 +50,7 @@ public class BoardController : MonoBehaviour
             }
             RegisterCards(cards);
         }
-        //cards.Clear();
     }
-
     private int SelectNewCardIndex()
     {
         if (availableIndices.Count == 0)
@@ -84,9 +78,29 @@ public class BoardController : MonoBehaviour
             Destroy(child.gameObject);
         }
     }
-    private bool GetCardAvailability(int index)
-    {
-        return availableIndices.Contains(index);
-    }
 
+
+    #region button utilities
+    public void ShuffleBoard()
+    {
+        List<Vector3> positions = new();
+        List<Transform> targets = new();
+        for (int i = 0; i < cardsOnBoard.Count; i++)
+        {
+            positions.Add(cardsOnBoard[i].transform.position);
+            targets.Add(cardsOnBoard[i].transform);
+        }
+        AnimationHandler.MoveAllToSinglePoint(targets, Vector3.zero, 0.04f);
+        positions.Shuffle();
+        for (int i = 0; i < cardsOnBoard.Count; i++)
+        {
+            cardsOnBoard[i].transform.position = positions[i];
+            cards[i].FlipCard();
+        }
+
+
+    }
+    #endregion
 }
+
+
