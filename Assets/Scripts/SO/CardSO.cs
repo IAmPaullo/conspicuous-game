@@ -10,7 +10,6 @@ public class CardSO : ScriptableObject
 
     [Space]
     public Sprite sprite;
-
 }
 #if UNITY_EDITOR
 [CustomEditor(typeof(CardSO))]
