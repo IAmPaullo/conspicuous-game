@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using System.Diagnostics.Tracing;
+using System.Runtime.InteropServices.WindowsRuntime;
 using UnityEngine;
 using UnityEngine.UI;
 public class BoardController : MonoBehaviour
@@ -8,17 +10,26 @@ public class BoardController : MonoBehaviour
     [SerializeField] private GridLayoutGroup gridLayout;
 
     [SerializeField] private List<CardSO> cardsScriptableObjects = new();
+    [SerializeField] private List<Card> cards = new();
 
-    private List<GameObject> cardsOnBoard;
-    private Dictionary<int, Card> cardDictionary;
+    public List<int> availableIndices;
 
-    public int maxMatches { get; private set; }
+    private List<GameObject> cardsOnBoard = new();
+    private Dictionary<int, List<Card>> cardDictionary = new();
 
+    [SerializeField] private int maxMatches;
+
+    private void Start()
+    {
+        CreateBoard(5, 4);
+    }
     public void CreateBoard(int rows, int columns)
     {
+        for (int i = 0; i < cardsScriptableObjects.Count; i++)
+        {
+            availableIndices.Add(i);
+        }
         ClearBoard();
-
-
         gridLayout.constraint = GridLayoutGroup.Constraint.FixedColumnCount;
         gridLayout.constraintCount = columns;
         FillCards(rows, columns);
@@ -26,38 +37,43 @@ public class BoardController : MonoBehaviour
 
     private void FillCards(int rows, int columns)
     {
-        List<int> chosenCard = new();
         int cardIndex;
+        //List<Card> cards = new();
         for (int i = 0; i < rows * columns; i++)
         {
-            //cardsOnBoard.Add(card);
-
-            do
-            {
-                cardIndex = Random.Range(0, cardsScriptableObjects.Count + 1);
-            }
-            while (chosenCard.Contains(cardIndex));
+            cardIndex = SelectNewCardIndex();
+            if (cardIndex < 0)
+                return;
             for (int c = 0; c < maxMatches; c++)
             {
                 GameObject card = Instantiate(cardPrefab, boardTransform);
                 var spawnedCard = card.GetComponent<Card>();
                 spawnedCard.Init(this, cardsScriptableObjects[cardIndex]);
-                RegisterCard(spawnedCard);
                 cardsOnBoard.Add(card);
+                cards.Add(spawnedCard);
             }
+            RegisterCards(cards);
         }
+        //cards.Clear();
     }
 
-    private CardSO SelectCardFrontside()
+    private int SelectNewCardIndex()
     {
-        return null;
+        if (availableIndices.Count == 0)
+            return -1;
+        int cardIndex;
+        int rand = Random.Range(0, availableIndices.Count);
+        cardIndex = availableIndices[rand];
+        availableIndices.Remove(cardIndex);
+
+        return cardIndex;
     }
 
-    private void RegisterCard(Card card)
+    private void RegisterCards(List<Card> cards)
     {
-        if (cardDictionary.ContainsKey(card.ID)) return;
+        if (cardDictionary.ContainsValue(cards)) return;
 
-        cardDictionary.Add(card.ID, card);
+        cardDictionary.Add(cards[0].ID, cards);
     }
     private void ClearBoard()
     {
@@ -67,6 +83,10 @@ public class BoardController : MonoBehaviour
         {
             Destroy(child.gameObject);
         }
+    }
+    private bool GetCardAvailability(int index)
+    {
+        return availableIndices.Contains(index);
     }
 
 }

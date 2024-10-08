@@ -28,10 +28,10 @@ public class Card : MonoBehaviour
 
     public void Init(BoardController controller, CardSO cardSO)
     {
-        imageRender.sprite = cardFrontside;
         this.controller = controller;
         cardID = cardSO.ID;
         cardFrontside = cardSO.sprite;
+        imageRender.sprite = cardFrontside;
     }
     private void SelectCard()
     {
