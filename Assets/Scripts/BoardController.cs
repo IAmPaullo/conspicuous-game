@@ -4,6 +4,7 @@ using UnityEngine.UI;
 public class BoardController : MonoBehaviour
 {
     [SerializeField] private GameObject cardPrefab;
+    [SerializeField] private Transform cardHolder;
     [SerializeField] private Transform boardTransform;
     [SerializeField] private GridLayoutGroup gridLayout;
 
@@ -16,6 +17,7 @@ public class BoardController : MonoBehaviour
     private Dictionary<int, List<Card>> cardDictionary = new();
 
     [SerializeField] private int maxMatches;
+    AnimationHandler animator;
 
     private void Start()
     {
@@ -23,15 +25,31 @@ public class BoardController : MonoBehaviour
     }
     public void CreateBoard(int rows, int columns)
     {
+        //gridLayout.constraint = GridLayoutGroup.Constraint.FixedColumnCount;
+        //gridLayout.constraintCount = columns;
         for (int i = 0; i < cardsScriptableObjects.Count; i++)
         {
             availableIndices.Add(i);
         }
-        ClearBoard();
-        gridLayout.constraint = GridLayoutGroup.Constraint.FixedColumnCount;
-        gridLayout.constraintCount = columns;
+        //ClearBoard();
         FillCards(rows, columns);
+        AnimateBoard();
     }
+
+    private void AnimateBoard()
+    {
+        List<Transform> transforms = new();
+        List<Vector3> positions = new();
+        for (int i = 0; i < cardsOnBoard.Count; i++)
+        {
+            transforms.Add(cardsOnBoard[i].transform);
+            positions.Add(cardsOnBoard[i].transform.position);
+        }
+        positions.Shuffle();
+        AnimationHandler.MoveAllToSinglePoint(transforms, cardHolder.position, 0f);
+        AnimationHandler.MoveAllToParent(transforms.ToArray(), positions.ToArray(), gridLayout.transform, 0.15f, DG.Tweening.Ease.InFlash);
+    }
+    //TODO fix board showing card
     private void FillCards(int rows, int columns)
     {
         int cardIndex;
@@ -40,9 +58,9 @@ public class BoardController : MonoBehaviour
             cardIndex = SelectNewCardIndex();
             if (cardIndex < 0)
                 return;
-            for (int c = 0; c < maxMatches; c++)
+            for (int j = 0; j < maxMatches; j++)
             {
-                GameObject card = Instantiate(cardPrefab, boardTransform);
+                GameObject card = Instantiate(cardPrefab, gridLayout.transform);
                 var spawnedCard = card.GetComponent<Card>();
                 spawnedCard.Init(this, cardsScriptableObjects[cardIndex]);
                 cardsOnBoard.Add(card);
@@ -81,7 +99,7 @@ public class BoardController : MonoBehaviour
 
 
     #region button utilities
-    public void ShuffleBoard()
+    public async void ShuffleBoard()
     {
         List<Vector3> positions = new();
         List<Transform> targets = new();
@@ -90,15 +108,14 @@ public class BoardController : MonoBehaviour
             positions.Add(cardsOnBoard[i].transform.position);
             targets.Add(cardsOnBoard[i].transform);
         }
-        AnimationHandler.MoveAllToSinglePoint(targets, Vector3.zero, 0.04f);
+        await AnimationHandler.MoveAllToSinglePointAsync(targets, Vector3.zero, 0.04f);
         positions.Shuffle();
         for (int i = 0; i < cardsOnBoard.Count; i++)
         {
-            cardsOnBoard[i].transform.position = positions[i];
+            //cardsOnBoard[i].transform.position = positions[i];
+            await AnimationHandler.MoveToPositionAsync(cardsOnBoard[i].transform, positions[i]);
             cards[i].FlipCard();
         }
-
-
     }
     #endregion
 }

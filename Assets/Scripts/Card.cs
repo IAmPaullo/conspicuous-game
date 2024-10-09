@@ -33,6 +33,7 @@ public class Card : MonoBehaviour
         cardID = cardSO.ID;
         cardFrontside = cardSO.sprite;
         imageRender.sprite = cardFrontside;
+        imageRender.enabled = false;
     }
     private void SelectCard()
     {
@@ -44,7 +45,10 @@ public class Card : MonoBehaviour
 
     public void FlipCard()
     {
+
         int dir = isFlipped ? 1 : -1;
+        if (!imageRender.enabled)
+            imageRender.enabled = true;
         AnimationHandler.FlipHorizontal(transform, dir, 0.5f);
     }
 }
