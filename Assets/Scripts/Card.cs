@@ -16,39 +16,34 @@ public class Card : MonoBehaviour
     public int ID => cardID;
 
 
-    private bool isFlipped;
+    private bool isBacksideShowing = true;
 
-    //public Card(BoardController controller, CardSO cardSO)
-    //{
 
-    //    this.controller = controller;
-    //    //this.ID = ID;
-    //    //this.cardFrontside = cardFrontside;
-    //    Init();
-    //}
 
     public void Init(BoardController controller, CardSO cardSO)
     {
         this.controller = controller;
         cardID = cardSO.ID;
         cardFrontside = cardSO.sprite;
-        imageRender.sprite = cardFrontside;
+        imageRender.sprite = cardBackside;
         imageRender.enabled = false;
+        isBacksideShowing = true;
     }
     private void SelectCard()
     {
 
 
-        imageRender.sprite = isFlipped ? cardFrontside : cardBackside;
+        imageRender.sprite = isBacksideShowing ? cardFrontside : cardBackside;
 
     }
 
     public void FlipCard()
     {
-
-        int dir = isFlipped ? 1 : -1;
+        int dir = isBacksideShowing ? 1 : -1;
+        var cardSide = isBacksideShowing ? cardFrontside : cardBackside;
         if (!imageRender.enabled)
             imageRender.enabled = true;
-        AnimationHandler.FlipHorizontal(transform, dir, 0.5f);
+
+        AnimationHandler.FlipCardWithImageChange(transform, imageRender, cardSide, 0.15f, dir);
     }
 }

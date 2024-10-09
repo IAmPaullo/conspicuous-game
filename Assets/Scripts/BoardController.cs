@@ -46,9 +46,12 @@ public class BoardController : MonoBehaviour
             positions.Add(cardsOnBoard[i].transform.position);
         }
         positions.Shuffle();
-        AnimationHandler.MoveAllToSinglePoint(transforms, cardHolder.position, 0f);
-        AnimationHandler.MoveAllToParent(transforms.ToArray(), positions.ToArray(), gridLayout.transform, 0.15f, DG.Tweening.Ease.InFlash);
+
+        MoveCardsToParent(transforms.ToArray(), cardHolder);
+
+        AnimationHandler.MoveAllToSpecifiedPoints(transforms.ToArray(), positions.ToArray(), gridLayout.transform, 0.15f);
     }
+
     //TODO fix board showing card
     private void FillCards(int rows, int columns)
     {
@@ -94,6 +97,16 @@ public class BoardController : MonoBehaviour
         foreach (Transform child in boardTransform)
         {
             Destroy(child.gameObject);
+        }
+    }
+
+
+    private void MoveCardsToParent(Transform[] cards, Transform parent, Vector3 position = default)
+    {
+        for (int i = 0; i < cards.Length; i++)
+        {
+            cards[i].SetParent(parent);
+            cards[i].position = position;
         }
     }
 

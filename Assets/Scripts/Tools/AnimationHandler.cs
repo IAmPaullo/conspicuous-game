@@ -2,9 +2,8 @@ using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using TMPro;
 using UnityEngine;
-using UnityEngine.UIElements;
+using UnityEngine.UI;
 
 public class AnimationHandler : MonoBehaviour
 {
@@ -16,10 +15,13 @@ public class AnimationHandler : MonoBehaviour
     }
 
 
-    public static void FlipHorizontal(Transform t, int direction, float speed = .5f)
+    public static void FlipCardWithImageChange(Transform t, Image cardImage, Sprite newSprite, float speed = 0.5f, int direction = 1)
     {
-
-        t.DOScaleX(direction, speed);
+        t.DOScaleX(0, speed / 2).OnComplete(() =>
+        {
+            cardImage.sprite = newSprite;
+            t.DOScaleX(direction, speed / 2);
+        });
     }
     public static void FlipVertical(Transform t, int direction, float speed = .5f)
     {
@@ -41,14 +43,20 @@ public class AnimationHandler : MonoBehaviour
             sequence.Append(t[i].DOMove(pos, speed).SetEase(easing));
         }
     }
-    public static void MoveAllToSpecifiedPoints(Transform[] t, Vector3[] pos, float speed = .5f, Ease easing = Ease.Linear)
+    public static void MoveAllToSpecifiedPoints(Transform[] t, Vector3[] pos, Transform parent, float speed = .5f, Ease easing = Ease.Linear)
     {
 
         Sequence sequence = DOTween.Sequence();
-
         for (int i = 0; i < t.Length; i++)
         {
-            sequence.Append(t[i].DOMove(pos[i], speed).SetEase(easing));
+            int index = i;
+            t[index].SetParent(parent);
+
+            sequence.Append(t[index].DOMove(pos[index], speed).SetEase(easing).OnComplete(() =>
+            {
+                Card c = t[index].GetComponent<Card>();
+                c.FlipCard();
+            }));
         }
     }
     public static void MoveToPositionWithCompletion(Transform t, Vector3 pos, float speed = .5f, Ease easing = Ease.Linear)
