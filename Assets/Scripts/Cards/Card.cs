@@ -18,6 +18,11 @@ public class Card : MonoBehaviour, IPointerClickHandler
 
     public int ID => cardID;
 
+
+    [SerializeField] private AudioClip[] onClickAudio;
+    [SerializeField] private AudioSource audioSource;
+    private AudioClip[] disabledCardSound;
+
     public void Init(BoardController boardController, CardController cardController, CardSO cardSO)
     {
         this.boardController = boardController;
@@ -36,28 +41,24 @@ public class Card : MonoBehaviour, IPointerClickHandler
         {
             cardController.SelectCard(this);
         }
+        else
+        {
+            PlaySound(disabledCardSound);
+        }
     }
 
-
+  
     public void Flip(bool showFront)
     {
         if (showFront != isShowingFront)
         {
+            PlaySound(onClickAudio);
             Sprite targetSprite = showFront ? cardFrontside : cardBackside;
-            FlipCard(targetSprite);
+            AnimationHandler.FlipCardWithImageChange(transform, imageRender, targetSprite, 0.35f); 
             isShowingFront = showFront;
         }
     }
 
-
-    private void FlipCard(Sprite newSprite)
-    {
-        transform.DOScaleX(0, 0.2f).OnComplete(() =>
-        {
-            imageRender.sprite = newSprite;
-            transform.DOScaleX(1, 0.2f);
-        });
-    }
 
     public bool IsEqual(Card otherCard)
     {
@@ -74,11 +75,23 @@ public class Card : MonoBehaviour, IPointerClickHandler
         isEnabled = true;
         isShowingFront = true;
         imageRender.sprite = cardBackside;
-        //imageRender.enabled = true;
     }
 
     public bool IsEnabled()
     {
         return isEnabled;
     }
+    private void PlaySound(AudioClip[] soundsToPlay)
+    {
+        audioSource.clip = soundsToPlay[Random.Range(0, soundsToPlay.Length)];
+        audioSource.pitch = Random.value;
+        audioSource.Play();
+    }
+    private void PlaySound(AudioClip soundToPlay)
+    {
+        audioSource.clip = soundToPlay;
+        audioSource.pitch = Random.value;
+        audioSource.Play();
+    }
+
 }

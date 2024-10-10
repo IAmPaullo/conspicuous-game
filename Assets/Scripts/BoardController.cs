@@ -105,21 +105,6 @@ public class BoardController : MonoBehaviour
     }
 
 
-
-
-    private int SelectNewCardIndex()
-    {
-        if (availableIndices.Count == 0)
-            return -1;
-        int cardIndex;
-        int rand = Random.Range(0, availableIndices.Count);
-        cardIndex = availableIndices[rand];
-        availableIndices.Remove(cardIndex);
-
-        return cardIndex;
-    }
-
-
     private void ClearBoard()
     {
         if (boardTransform.childCount <= 0) return;
