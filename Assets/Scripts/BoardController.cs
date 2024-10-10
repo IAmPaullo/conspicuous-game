@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 public class BoardController : MonoBehaviour
 {
+    [SerializeField] private CardController cardController;
     [SerializeField] private GameObject cardPrefab;
     [SerializeField] private Transform cardHolder;
     [SerializeField] private Transform boardTransform;
@@ -10,6 +11,8 @@ public class BoardController : MonoBehaviour
 
     [SerializeField] private List<CardSO> cardsScriptableObjects = new();
     [SerializeField] private List<Card> cards = new();
+    [SerializeField] List<Vector3> positions = new();
+
 
     public List<int> availableIndices;
 
@@ -31,7 +34,6 @@ public class BoardController : MonoBehaviour
         {
             availableIndices.Add(i);
         }
-        //ClearBoard();
         FillCards(rows, columns);
         AnimateBoard();
     }
@@ -49,7 +51,12 @@ public class BoardController : MonoBehaviour
 
         MoveCardsToParent(transforms.ToArray(), cardHolder);
 
-        AnimationHandler.MoveAllToSpecifiedPoints(transforms.ToArray(), positions.ToArray(), gridLayout.transform, 0.15f);
+        AnimationHandler.MoveAllToSpecifiedPoints(transforms.ToArray(), positions.ToArray(),
+            gridLayout.transform,
+            0.15f,
+            onComplete: ShuffleBoard);
+
+
     }
 
     //TODO fix board showing card
@@ -65,7 +72,7 @@ public class BoardController : MonoBehaviour
             {
                 GameObject card = Instantiate(cardPrefab, gridLayout.transform);
                 var spawnedCard = card.GetComponent<Card>();
-                spawnedCard.Init(this, cardsScriptableObjects[cardIndex]);
+                spawnedCard.Init(this, cardController, cardsScriptableObjects[cardIndex]);
                 cardsOnBoard.Add(card);
                 cards.Add(spawnedCard);
             }
@@ -114,20 +121,21 @@ public class BoardController : MonoBehaviour
     #region button utilities
     public async void ShuffleBoard()
     {
-        List<Vector3> positions = new();
+        //List<Vector3> positions = new();
         List<Transform> targets = new();
+
+
         for (int i = 0; i < cardsOnBoard.Count; i++)
         {
             positions.Add(cardsOnBoard[i].transform.position);
             targets.Add(cardsOnBoard[i].transform);
         }
-        await AnimationHandler.MoveAllToSinglePointAsync(targets, Vector3.zero, 0.04f);
         positions.Shuffle();
+        await AnimationHandler.MoveAllToSinglePointAsync(targets, Vector3.zero, 0.04f);
         for (int i = 0; i < cardsOnBoard.Count; i++)
         {
-            //cardsOnBoard[i].transform.position = positions[i];
-            await AnimationHandler.MoveToPositionAsync(cardsOnBoard[i].transform, positions[i]);
-            cards[i].FlipCard();
+            await AnimationHandler.MoveToPositionAsync(cardsOnBoard[i].transform, positions[i], 0.1f);
+            //cards[i].FlipCard();
         }
     }
     #endregion

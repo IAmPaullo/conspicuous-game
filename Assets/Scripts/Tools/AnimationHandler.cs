@@ -1,4 +1,5 @@
 using DG.Tweening;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -43,7 +44,7 @@ public class AnimationHandler : MonoBehaviour
             sequence.Append(t[i].DOMove(pos, speed).SetEase(easing));
         }
     }
-    public static void MoveAllToSpecifiedPoints(Transform[] t, Vector3[] pos, Transform parent, float speed = .5f, Ease easing = Ease.Linear)
+    public static void MoveAllToSpecifiedPoints(Transform[] t, Vector3[] pos, Transform parent, float speed = .5f, Ease easing = Ease.Linear, Action onComplete = null)
     {
 
         Sequence sequence = DOTween.Sequence();
@@ -58,6 +59,10 @@ public class AnimationHandler : MonoBehaviour
                 c.FlipCard();
             }));
         }
+        sequence.OnComplete(() =>
+        {
+            onComplete?.Invoke();
+        });
     }
     public static void MoveToPositionWithCompletion(Transform t, Vector3 pos, float speed = .5f, Ease easing = Ease.Linear)
     {
