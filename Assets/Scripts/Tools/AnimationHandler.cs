@@ -3,8 +3,11 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.UIElements.Experimental;
+using static UnityEngine.GraphicsBuffer;
 
 public class AnimationHandler : MonoBehaviour
 {
@@ -15,6 +18,12 @@ public class AnimationHandler : MonoBehaviour
         DOTween.Init();
     }
 
+
+
+    public static void ColorObject(Image image, Color color, float endValue)
+    {
+        image.DOColor(color, endValue);
+    }
 
     public static void FlipCardWithImageChange(Transform t, Image cardImage, Sprite newSprite, float speed = 0.5f, int direction = 1)
     {
@@ -29,6 +38,24 @@ public class AnimationHandler : MonoBehaviour
 
         t.DOScaleX(direction, speed);
     }
+
+    public static void StartHoverAnimation(Transform cardTransform, float scaleAmount = 1.1f, float duration = 0.5f)
+    {
+
+        tween = cardTransform.DOScale(scaleAmount, duration)
+                     .SetLoops(-1, LoopType.Yoyo)
+                     .SetEase(Ease.InOutSine);
+    }
+
+
+    public static void StopHoverAnimation(Transform cardTransform, float duration = 0.3f)
+    {
+
+        cardTransform.DOKill();
+        cardTransform.DOScale(1f, duration).SetEase(Ease.OutSine);
+    }
+
+
     public static void MoveToPosition(Transform t, Vector3 pos, float speed = .5f)
     {
 
@@ -131,6 +158,45 @@ public class AnimationHandler : MonoBehaviour
             await t[i].DOMove(pos, speed).SetEase(easing).AsyncWaitForCompletion();
         }
 
+    }
+
+    public static void MoveTogether(Transform t1, Transform t2, Transform finalPos, float speed = 0.5f, Ease easing = Ease.Linear)
+    {
+
+        //TODO: FIX CARD ANIMATION NOT FLIPPING AFTER MERGE/MOVETOGETHER
+
+
+        Vector3 middlePoint = (t1.position + t2.position) / 2;
+
+
+        Sequence moveToMiddle = DOTween.Sequence();
+
+        moveToMiddle.Join(t1.DOMove(middlePoint, speed).SetEase(easing));
+        moveToMiddle.Join(t2.DOMove(middlePoint, speed).SetEase(easing));
+
+
+        moveToMiddle.OnComplete(() =>
+        {
+            t1.DOMove(finalPos.position, speed).SetEase(easing)
+            .OnComplete(() => t1.SetParent(finalPos));
+            t2.DOMove(finalPos.position, speed).SetEase(easing)
+            .OnComplete(() => t2.SetParent(finalPos)); ;
+        });
+
+
+
+    }
+    public static void ExitCard(Transform t, Vector3 exitPosition, Vector3 scale, float speed = 0.5f, Ease easing = Ease.Linear)
+    {
+
+        Sequence sequence = DOTween.Sequence();
+
+
+        sequence.Join(t.DOMove(exitPosition, speed).SetEase(Ease.InOutQuad));
+
+        sequence.Join(t.DOScale(scale, speed).SetEase(Ease.InOutQuad));
+
+        sequence.Play();
     }
 
 

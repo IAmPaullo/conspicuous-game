@@ -7,6 +7,7 @@ public class CardController : MonoBehaviour
     private List<Card> selectedCards = new List<Card>();
     [SerializeField] private int maxSelectedCards = 2;
     private List<Card> allCards = new List<Card>();
+    [SerializeField] private Transform cardHolder;
 
     public delegate void OnMatchFound(Card card1, Card card2);
     public event OnMatchFound MatchFoundEvent;
@@ -21,8 +22,13 @@ public class CardController : MonoBehaviour
 
     public void SelectCard(Card card)
     {
-        if (selectedCards.Contains(card) || selectedCards.Count >= maxSelectedCards)
+        if (selectedCards.Count >= maxSelectedCards)
             return;
+        if (selectedCards.Contains(card))
+        {
+            selectedCards.Remove(card);
+            return;
+        }
 
         selectedCards.Add(card);
         card.Flip(true);
@@ -53,10 +59,11 @@ public class CardController : MonoBehaviour
 
     private void OnMatch(Card card1, Card card2)
     {
-        card1.DisableCard();
-        card2.DisableCard();
+        card1.OnMatch();
+        card2.OnMatch();
         MatchFoundEvent?.Invoke(card1, card2);
         ClearSelectedCards();
+        AnimationHandler.MoveTogether(card1.transform, card2.transform, cardHolder);
     }
 
     private void OnMismatch(Card card1, Card card2)

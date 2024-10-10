@@ -16,4 +16,13 @@ public static class ListExtensions
             list[n] = value;
         }
     }
+    public static bool IsValid<T>(IList<T> list)
+    {
+        return list == null || list.Count == 0;
+    }
+    //public static void Validate<T>(IList<T> list, string listName)
+    //{
+    //    if (list == null || list.Count == 0)
+    //        throw new System.Exception($"The List {listName} is null or empty.");
+    //}
 }

@@ -188,7 +188,8 @@ MonoBehaviour:
   imageRender: {fileID: 2571467163223396475}
   cardBackside: {fileID: 21300000, guid: 44dfe09a7eaefff4ba5d2caeb7ac78de, type: 3}
   onClickAudio:
-  - {fileID: 8300000, guid: 02d09e3d0964e0442aa4509bf36a2ac5, type: 3}
+  - {fileID: 8300000, guid: 722f772db946b6741afef97fbd0777fb, type: 3}
+  - {fileID: 8300000, guid: 2ebf2421dddc15a45b7fc6ae8197b1c0, type: 3}
   audioSource: {fileID: 6397355668572332341}
   disabledCardSound: {fileID: 0}
 --- !u!222 &6980954298825787168

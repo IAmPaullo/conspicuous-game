@@ -13,7 +13,8 @@ public class Card : Validatable, IPointerClickHandler
     private CardController cardController;
 
     private bool isShowingFront;
-    private bool isEnabled = true;
+    private bool isEnabled;
+    private bool isSelected;
 
     public int ID => cardID;
 
@@ -22,6 +23,9 @@ public class Card : Validatable, IPointerClickHandler
     [SerializeField] private AudioSource audioSource;
     [SerializeField] private AudioClip disabledCardSound;
     private CardSO cardSO;
+
+    [SerializeField] private Color selectedColor = Color.yellow;
+    [SerializeField] private float selectionAnimationScale = 1.2f;
 
     public void Init(BoardController boardController, CardController cardController, CardSO cardSO)
     {
@@ -42,6 +46,7 @@ public class Card : Validatable, IPointerClickHandler
         if (isEnabled)
         {
             cardController.SelectCard(this);
+            SelectCardVisualEffect(true);
         }
         else
         {
@@ -52,6 +57,8 @@ public class Card : Validatable, IPointerClickHandler
 
     public void Flip(bool showFront)
     {
+        if (isSelected)
+            SelectCardVisualEffect(false);
         if (showFront != isShowingFront)
         {
             PlaySound(onClickAudio);
@@ -67,9 +74,13 @@ public class Card : Validatable, IPointerClickHandler
         return otherCard != null && cardID == otherCard.cardID;
     }
 
-    public void DisableCard()
+    public void OnMatch()
     {
         isEnabled = false;
+        isSelected = false;
+        SelectCardVisualEffect(false);
+        //AnimationHandler.ExitCard(transform, new(10f, 50f, 0f), new(0.1f, 0.1f, .1f), 0.15f);
+        
     }
 
     public void EnableCard()
@@ -98,6 +109,21 @@ public class Card : Validatable, IPointerClickHandler
         audioSource.PlayOneShot(soundToPlay);
     }
 
+    public void SelectCardVisualEffect(bool selected)
+    {
+        isSelected = selected;
+
+        if (isSelected)
+        {
+            AnimationHandler.StartHoverAnimation(transform, selectionAnimationScale);
+            AnimationHandler.ColorObject(imageRender, selectedColor, 0.3f);
+        }
+        else
+        {
+            AnimationHandler.StopHoverAnimation(transform);
+            AnimationHandler.ColorObject(imageRender, Color.white, 0.3f);
+        }
+    }
 
 
     #region validate
