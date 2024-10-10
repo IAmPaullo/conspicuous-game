@@ -25,7 +25,7 @@ public class CardController : MonoBehaviour
             return;
 
         selectedCards.Add(card);
-        card.FlipCard();
+        card.Flip(true);
 
         if (selectedCards.Count == maxSelectedCards)
         {
@@ -68,8 +68,8 @@ public class CardController : MonoBehaviour
     private IEnumerator FlipBackCards(Card card1, Card card2)
     {
         yield return new WaitForSeconds(1.0f);
-        card1.FlipCard();
-        card2.FlipCard();
+        card1.Flip(false);
+        card2.Flip(false);
         ClearSelectedCards();
     }
 
@@ -102,7 +102,7 @@ public class CardController : MonoBehaviour
     {
         foreach (Card card in allCards)
         {
-            card.FlipCard();
+            card.Flip(false);
             card.EnableCard();
         }
         ClearSelectedCards();

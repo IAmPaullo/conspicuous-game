@@ -56,7 +56,7 @@ public class AnimationHandler : MonoBehaviour
             sequence.Append(t[index].DOMove(pos[index], speed).SetEase(easing).OnComplete(() =>
             {
                 Card c = t[index].GetComponent<Card>();
-                c.FlipCard();
+                c.Flip(true);
             }));
         }
         sequence.OnComplete(() =>
@@ -89,7 +89,7 @@ public class AnimationHandler : MonoBehaviour
             sequence.Append(t[i].DOMove(positions[index], speed).SetEase(easing)).OnComplete(() =>
             {
                 t[index].SetParent(parent);
-                t[index].GetComponent<Card>().FlipCard();
+                t[index].GetComponent<Card>().Flip(true);
             });
         }
     }

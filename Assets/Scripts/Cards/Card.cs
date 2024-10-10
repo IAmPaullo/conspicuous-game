@@ -1,3 +1,4 @@
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -12,7 +13,7 @@ public class Card : MonoBehaviour, IPointerClickHandler
     private BoardController boardController;
     private CardController cardController;
 
-    private bool isBacksideShowing = true;
+    private bool isShowingFront;
     private bool isEnabled = true;
 
     public int ID => cardID;
@@ -24,8 +25,7 @@ public class Card : MonoBehaviour, IPointerClickHandler
         cardID = cardSO.ID;
         cardFrontside = cardSO.sprite;
         imageRender.sprite = cardBackside;
-        imageRender.enabled = false;
-        isBacksideShowing = true;
+        //imageRender.enabled = false;
         isEnabled = true;
     }
 
@@ -38,18 +38,25 @@ public class Card : MonoBehaviour, IPointerClickHandler
         }
     }
 
-    public void FlipCard()
+
+    public void Flip(bool showFront)
     {
-        if (!isEnabled) return;
+        if (showFront != isShowingFront)
+        {
+            Sprite targetSprite = showFront ? cardFrontside : cardBackside;
+            FlipCard(targetSprite);
+            isShowingFront = showFront;
+        }
+    }
 
-        int dir = isBacksideShowing ? 1 : -1;
-        var cardSide = isBacksideShowing ? cardFrontside : cardBackside;
 
-        if (!imageRender.enabled)
-            imageRender.enabled = true;
-
-        AnimationHandler.FlipCardWithImageChange(transform, imageRender, cardSide, 0.15f, dir);
-        isBacksideShowing = !isBacksideShowing;
+    private void FlipCard(Sprite newSprite)
+    {
+        transform.DOScaleX(0, 0.2f).OnComplete(() =>
+        {
+            imageRender.sprite = newSprite;
+            transform.DOScaleX(1, 0.2f);
+        });
     }
 
     public bool IsEqual(Card otherCard)
@@ -65,9 +72,9 @@ public class Card : MonoBehaviour, IPointerClickHandler
     public void EnableCard()
     {
         isEnabled = true;
-        isBacksideShowing = true;
+        isShowingFront = true;
         imageRender.sprite = cardBackside;
-        imageRender.enabled = false;
+        //imageRender.enabled = true;
     }
 
     public bool IsEnabled()
