@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -22,17 +23,24 @@ public class CardController : MonoBehaviour
 
     public void SelectCard(Card card)
     {
+        
+        if (!GameStateManager.Instance.CanSelectCard()) return;
+
         if (selectedCards.Count >= maxSelectedCards)
             return;
+
+       
         if (selectedCards.Contains(card))
         {
             selectedCards.Remove(card);
             return;
         }
 
+        
         selectedCards.Add(card);
         card.Flip(true);
 
+       
         if (selectedCards.Count == maxSelectedCards)
         {
             CheckSelectedCards();
@@ -61,13 +69,14 @@ public class CardController : MonoBehaviour
     {
         card1.OnMatch();
         card2.OnMatch();
+        AnimationHandler.MatchSuccessAnimation(card1.transform, card2.transform);
         MatchFoundEvent?.Invoke(card1, card2);
         ClearSelectedCards();
-        AnimationHandler.MoveTogether(card1.transform, card2.transform, cardHolder);
     }
 
     private void OnMismatch(Card card1, Card card2)
     {
+        AnimationHandler.MatchFailAnimation(card1.transform, card2.transform);
         MatchFailEvent?.Invoke(card1, card2);
         StartCoroutine(FlipBackCards(card1, card2));
     }

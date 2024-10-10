@@ -20,6 +20,11 @@ public class AnimationHandler : MonoBehaviour
 
 
 
+    public static void ShowCountdown()
+    {
+
+    }
+
     public static void ColorObject(Image image, Color color, float endValue)
     {
         image.DOColor(color, endValue);
@@ -27,6 +32,7 @@ public class AnimationHandler : MonoBehaviour
 
     public static void FlipCardWithImageChange(Transform t, Image cardImage, Sprite newSprite, float speed = 0.5f, int direction = 1)
     {
+        t.DOKill();
         t.DOScaleX(0, speed / 2).OnComplete(() =>
         {
             cardImage.sprite = newSprite;
@@ -182,10 +188,32 @@ public class AnimationHandler : MonoBehaviour
             t2.DOMove(finalPos.position, speed).SetEase(easing)
             .OnComplete(() => t2.SetParent(finalPos)); ;
         });
-
-
-
     }
+    public static void MatchSuccessAnimation(Transform t1, Transform t2, float speed = 0.5f, Ease easing = Ease.InOutBack)
+    {
+        Sequence matchSequence = DOTween.Sequence();
+        matchSequence.Join(t1.DOScale(Vector3.zero, speed).SetEase(easing));
+        matchSequence.Join(t2.DOScale(Vector3.zero, speed).SetEase(easing));
+        matchSequence.OnComplete(() =>
+        {
+            t1.gameObject.SetActive(false);
+            t2.gameObject.SetActive(false);
+        });
+    }
+
+    public static void MatchFailAnimation(Transform t1, Transform t2, float speed = 0.2f)
+    {
+        Sequence mismatchSequence = DOTween.Sequence();
+        mismatchSequence.Join(t1.DOShakePosition(speed, strength: new Vector3(0.2f, 0.2f, 0)));
+        mismatchSequence.Join(t2.DOShakePosition(speed, strength: new Vector3(0.2f, 0.2f, 0)));
+        mismatchSequence.OnComplete(() =>
+        {
+            t1.DOScale(Vector3.one, 0.2f);
+            t2.DOScale(Vector3.one, 0.2f);
+        });
+    }
+
+
     public static void ExitCard(Transform t, Vector3 exitPosition, Vector3 scale, float speed = 0.5f, Ease easing = Ease.Linear)
     {
 

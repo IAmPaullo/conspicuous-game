@@ -45,6 +45,8 @@ public class Card : Validatable, IPointerClickHandler, IPointerEnterHandler, IPo
 
     public void OnPointerClick(PointerEventData eventData)
     {
+        if (!GameStateManager.Instance.CanSelectCard()) return;
+
         if (isEnabled)
         {
             cardController.SelectCard(this);
@@ -58,13 +60,15 @@ public class Card : Validatable, IPointerClickHandler, IPointerEnterHandler, IPo
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        //change material
-        //scale
+        if (!GameStateManager.Instance.CanSelectCard()) return;
+
         AnimationHandler.HoverCard(transform, true);
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
+        if (!GameStateManager.Instance.CanSelectCard()) return;
+
         if (!isSelected)
             AnimationHandler.HoverCard(transform, false);
     }
@@ -95,13 +99,10 @@ public class Card : Validatable, IPointerClickHandler, IPointerEnterHandler, IPo
         isEnabled = false;
         isSelected = false;
         SelectCardVisualEffect(false);
-        //AnimationHandler.ExitCard(transform, new(10f, 50f, 0f), new(0.1f, 0.1f, .1f), 0.15f);
-
     }
 
     public void EnableCard()
     {
-        isEnabled = true;
         isShowingFront = true;
         imageRender.sprite = cardBackside;
     }

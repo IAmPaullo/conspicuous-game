@@ -1,4 +1,5 @@
 using DG.Tweening;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,6 +9,7 @@ public class BoardController : MonoBehaviour
     [SerializeField] private CardController cardController;
     [SerializeField] private GameObject cardPrefab;
     [SerializeField] private Transform cardHolder;
+    public Transform CardHolder => cardHolder;
     [SerializeField] private Transform boardTransform;
     [SerializeField] private GridLayoutGroup gridLayout;
 
@@ -22,7 +24,6 @@ public class BoardController : MonoBehaviour
     private Dictionary<int, List<Card>> cardDictionary = new();
 
     [SerializeField] private int maxMatches;
-    AnimationHandler animator;
     [SerializeField] private float waitTime;
 
     private void Start()
@@ -42,7 +43,7 @@ public class BoardController : MonoBehaviour
         {
             GameObject cardObj = Instantiate(cardPrefab, cardHolder);
             Card card = cardObj.GetComponent<Card>();
-            card.Init(this, cardController, cardSO);  // Inicializar a carta com o CardSO
+            card.Init(this, cardController, cardSO);
             cardsOnBoard.Add(cardObj);
             cards.Add(card);
         }
@@ -66,26 +67,35 @@ public class BoardController : MonoBehaviour
     {
         for (int i = 0; i < cardsOnBoard.Count; i++)
         {
-            cardsOnBoard[i].transform.SetParent(gridLayout.transform, false);  
+            cardsOnBoard[i].transform.SetParent(gridLayout.transform, false);
             //cardsOnBoard[i].transform.localScale = Vector3.one;  
         }
     }
     private IEnumerator FlipToFrontsideThenBack()
     {
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(0.1f);
 
         foreach (var card in cards)
         {
             card.Flip(true);
         }
 
+
         yield return new WaitForSeconds(waitTime);
+
 
         foreach (var card in cards)
         {
             card.Flip(false);
         }
+
+        yield return new WaitForSeconds(waitTime);
+        //Show go! AnimationHandler.ShowCountdown();
+        GameStateManager.Instance.SetGameState(GameStateManager.GameState.Playing);
+
     }
+
+
 
     private void FlipAllCardsToFront()
     {
@@ -105,6 +115,8 @@ public class BoardController : MonoBehaviour
     }
 
 
+
+
     private void ClearBoard()
     {
         if (boardTransform.childCount <= 0) return;
@@ -120,27 +132,25 @@ public class BoardController : MonoBehaviour
     {
         List<CardSO> cardPool = new List<CardSO>();
 
-        // Gera o pool de cartas baseado no maxMatches e no número de cartas necessárias
         while (cardPool.Count < totalCards)
         {
             foreach (CardSO cardSO in cardsScriptableObjects)
             {
                 for (int j = 0; j < maxMatches; j++)
                 {
-                    if (cardPool.Count >= totalCards)  // Se o pool de cartas já tiver o número necessário, interrompe
+                    if (cardPool.Count >= totalCards)
                         break;
                     cardPool.Add(cardSO);
                 }
             }
         }
 
-        cardPool.Shuffle();  // Embaralha a lista de cartas
+        cardPool.Shuffle();
         return cardPool;
     }
     #region button utilities
     public async void ShuffleBoard()
     {
-        //List<Vector3> positions = new();
         List<Transform> targets = new();
 
 
@@ -154,7 +164,6 @@ public class BoardController : MonoBehaviour
         for (int i = 0; i < cardsOnBoard.Count; i++)
         {
             await AnimationHandler.MoveToPositionAsync(cardsOnBoard[i].transform, positions[i], 0.1f);
-            //cards[i].FlipCard();
         }
     }
     #endregion
