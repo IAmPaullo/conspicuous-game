@@ -199,6 +199,47 @@ public class AnimationHandler : MonoBehaviour
         sequence.Play();
     }
 
+    internal static void HoverCard(Transform t, bool scaleUp, float speed = 0.5f, Ease easing = Ease.OutQuad)
+    {
+        float scale = scaleUp ? 1.2f : 1f;
+        t.DOScale(scale, speed).SetEase(easing);
+        if (scaleUp)
+        {
+
+            t.DORotate(new Vector3(0f, 0f, 10f), 0.6f, RotateMode.LocalAxisAdd)
+                .From(new Vector3(0f, 0f, -10f))
+                .SetLoops(-1, LoopType.Yoyo)
+                .SetEase(Ease.InOutSine);
+
+
+            t.DOLocalMoveY(t.localPosition.y + 0.2f, 0.3f)
+                .SetLoops(-1, LoopType.Yoyo)
+                .SetEase(Ease.InOutSine);
+        }
+        else
+        {
+
+            ResetCard(t, speed);
+        }
+
+    }
+
+    public static void ResetCard(Transform t, float speed = 0.3f)
+    {
+        t.DOKill();
+
+        t.DOScale(1f, speed).SetEase(Ease.OutQuad);
+
+        t.DORotate(Vector3.zero, speed).SetEase(Ease.OutQuad);
+    }
+
+    public static void ResetCard(Transform t, Vector3 originalScale, float speed = 0f)
+    {
+        t.DOKill();
+        t.DOScale(originalScale, speed).SetEase(Ease.OutQuad);
+        t.DORotate(Vector3.zero, speed).SetEase(Ease.OutQuad);
+    }
+
 
     #endregion
 

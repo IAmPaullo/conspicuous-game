@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class Card : Validatable, IPointerClickHandler
+public class Card : Validatable, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler
 {
     [SerializeField] private Image imageRender;
     [SerializeField] private Sprite cardBackside;
@@ -40,6 +40,8 @@ public class Card : Validatable, IPointerClickHandler
     }
 
 
+    #region pointer
+
 
     public void OnPointerClick(PointerEventData eventData)
     {
@@ -54,6 +56,20 @@ public class Card : Validatable, IPointerClickHandler
         }
     }
 
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        //change material
+        //scale
+        AnimationHandler.HoverCard(transform, true);
+    }
+
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        if (!isSelected)
+            AnimationHandler.HoverCard(transform, false);
+    }
+
+    #endregion
 
     public void Flip(bool showFront)
     {
@@ -80,7 +96,7 @@ public class Card : Validatable, IPointerClickHandler
         isSelected = false;
         SelectCardVisualEffect(false);
         //AnimationHandler.ExitCard(transform, new(10f, 50f, 0f), new(0.1f, 0.1f, .1f), 0.15f);
-        
+
     }
 
     public void EnableCard()
