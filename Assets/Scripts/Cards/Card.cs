@@ -4,6 +4,7 @@ using UnityEngine.UI;
 
 public class Card : Validatable, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler
 {
+    [Header("References")]
     [SerializeField] private Image imageRender;
     [SerializeField] private Sprite cardBackside;
 
@@ -12,6 +13,8 @@ public class Card : Validatable, IPointerClickHandler, IPointerEnterHandler, IPo
     private BoardController boardController;
     private CardController cardController;
 
+
+    [Header("Status")]
     [SerializeField, ReadOnly] private bool isShowingFront;
     [SerializeField, ReadOnly] private bool isEnabled;
     [SerializeField, ReadOnly] private bool isSelected;
@@ -20,7 +23,7 @@ public class Card : Validatable, IPointerClickHandler, IPointerEnterHandler, IPo
 
     public int ID => cardID;
 
-
+    [Header("Audio")]
     [SerializeField] private AudioClip[] onClickAudio;
     [SerializeField] private AudioSource audioSource;
     [SerializeField] private AudioClip disabledCardSound;

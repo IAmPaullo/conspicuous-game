@@ -1484,6 +1484,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 21723643d88d64842958676c8292b9ec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  maxColumn: 4
+  maxRow: 4
   cardController: {fileID: 763816240}
   countdown: {fileID: 362126750}
   cardPrefab: {fileID: 3547681135276550906, guid: 4bce7eac8e64fe34386ba91c9e1c399b, type: 3}
@@ -1503,9 +1505,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: b2282736defe9a646904a8c46cc7f996, type: 2}
   cards: []
   positions: []
-  availableIndices: 
   maxMatches: 2
-  waitTime: 3
+  waitTime: 1.5
 --- !u!1 &1742066361
 GameObject:
   m_ObjectHideFlags: 0
@@ -1710,7 +1711,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1754063653}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3fdcf8a94f24ac84788368c9ad909a48, type: 3}
   m_Name: 

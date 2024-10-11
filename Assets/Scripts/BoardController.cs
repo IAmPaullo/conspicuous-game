@@ -6,6 +6,10 @@ using UnityEngine;
 using UnityEngine.UI;
 public class BoardController : MonoBehaviour
 {
+    [SerializeField, Range(1, 6)] private int maxColumn;
+    [SerializeField, Range(1, 6)] private int maxRow;
+
+    [Header("References")]
     [SerializeField] private CardController cardController;
     [SerializeField] private Countdown countdown;
     [SerializeField] private GameObject cardPrefab;
@@ -16,20 +20,19 @@ public class BoardController : MonoBehaviour
 
     [SerializeField] private List<CardSO> cardsScriptableObjects = new();
     [SerializeField] private List<Card> cards = new();
-    [SerializeField] List<Vector3> positions = new();
+    [SerializeField, ReadOnly] List<Vector3> positions = new();
 
-
-    public List<int> availableIndices;
 
     private List<GameObject> cardsOnBoard = new();
     private Dictionary<int, List<Card>> cardDictionary = new();
 
-    [SerializeField] private int maxMatches;
-    [SerializeField] private float waitTime;
+    [Header("Misc values")]
+    [SerializeField, ReadOnly] private int maxMatches = 2;
+    [SerializeField] private float waitTime = 1.5f;
 
     private void Start()
     {
-        CreateBoard(2, 2);
+        CreateBoard(maxRow, maxColumn);
     }
     public void CreateBoard(int rows, int columns)
     {
@@ -97,7 +100,7 @@ public class BoardController : MonoBehaviour
     }
 
 
-    
+
 
 
     private void ClearBoard()
