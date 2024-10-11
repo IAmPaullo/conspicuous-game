@@ -47,45 +47,44 @@ public class Card : Validatable, IPointerClickHandler, IPointerEnterHandler, IPo
     {
         if (!GameStateManager.Instance.CanSelectCard()) return;
 
-        if (isEnabled)
+        if (!isSelected)
         {
-            cardController.SelectCard(this);
             SelectCardVisualEffect(true);
         }
         else
         {
+            SelectCardVisualEffect(false);
             PlaySound(disabledCardSound);
         }
+        cardController.SelectCard(this);
     }
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        if (!GameStateManager.Instance.CanSelectCard()) return;
+        if (!GameStateManager.Instance.CanSelectCard() || isSelected) return;
 
         AnimationHandler.HoverCard(transform, true);
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        if (!GameStateManager.Instance.CanSelectCard()) return;
+        if (!GameStateManager.Instance.CanSelectCard() /*|| isSelected*/) return;
 
-        if (!isSelected)
-            AnimationHandler.HoverCard(transform, false);
+        AnimationHandler.HoverCard(transform, false);
     }
 
     #endregion
 
     public void Flip(bool showFront)
     {
-        if (isSelected)
-            SelectCardVisualEffect(false);
-        if (showFront != isShowingFront)
-        {
-            PlaySound(onClickAudio);
-            Sprite targetSprite = showFront ? cardFrontside : cardBackside;
-            AnimationHandler.FlipCardWithImageChange(transform, imageRender, targetSprite, 0.35f);
-            isShowingFront = showFront;
-        }
+        //if (isSelected)
+        //    SelectCardVisualEffect(false);
+
+        PlaySound(onClickAudio);
+        Sprite targetSprite = showFront ? cardFrontside : cardBackside;
+        AnimationHandler.FlipCardWithImageChange(transform, imageRender, targetSprite, 0.35f);
+        isShowingFront = showFront;
+        isSelected = showFront;
     }
 
 
@@ -103,8 +102,12 @@ public class Card : Validatable, IPointerClickHandler, IPointerEnterHandler, IPo
 
     public void EnableCard()
     {
-        isShowingFront = true;
         imageRender.sprite = cardBackside;
+    }
+    public void DisableCard()
+    {
+        Flip(false);
+        isSelected = false;
     }
 
     public bool IsEnabled()
@@ -132,13 +135,13 @@ public class Card : Validatable, IPointerClickHandler, IPointerEnterHandler, IPo
 
         if (isSelected)
         {
-            AnimationHandler.StartHoverAnimation(transform, selectionAnimationScale);
-            AnimationHandler.ColorObject(imageRender, selectedColor, 0.3f);
+            //AnimationHandler.StartHoverAnimation(transform, selectionAnimationScale);
+            //AnimationHandler.ColorObject(imageRender, selectedColor, 0.3f);
         }
         else
         {
-            AnimationHandler.StopHoverAnimation(transform);
-            AnimationHandler.ColorObject(imageRender, Color.white, 0.3f);
+            //AnimationHandler.StopHoverAnimation(transform);
+            //AnimationHandler.ColorObject(imageRender, Color.white, 0.3f);
         }
     }
 

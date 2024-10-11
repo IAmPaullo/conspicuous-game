@@ -33,6 +33,7 @@ public class CardController : MonoBehaviour
         if (selectedCards.Contains(card))
         {
             selectedCards.Remove(card);
+            card.DisableCard();
             return;
         }
 

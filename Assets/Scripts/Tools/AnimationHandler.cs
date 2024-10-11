@@ -32,7 +32,7 @@ public class AnimationHandler : MonoBehaviour
 
     public static void FlipCardWithImageChange(Transform t, Image cardImage, Sprite newSprite, float speed = 0.5f, int direction = 1)
     {
-        t.DOKill();
+        t.DOKill(true);
         t.DOScaleX(0, speed / 2).OnComplete(() =>
         {
             cardImage.sprite = newSprite;
@@ -45,20 +45,20 @@ public class AnimationHandler : MonoBehaviour
         t.DOScaleX(direction, speed);
     }
 
-    public static void StartHoverAnimation(Transform cardTransform, float scaleAmount = 1.1f, float duration = 0.5f)
+    public static void StartHoverAnimation(Transform t, float scaleAmount = 1.1f, float duration = 0.5f)
     {
 
-        tween = cardTransform.DOScale(scaleAmount, duration)
-                     .SetLoops(-1, LoopType.Yoyo)
-                     .SetEase(Ease.InOutSine);
+        t.DOScale(scaleAmount, duration)
+                             .SetLoops(-1, LoopType.Yoyo)
+                             .SetEase(Ease.InOutSine);
     }
 
 
-    public static void StopHoverAnimation(Transform cardTransform, float duration = 0.3f)
+    public static void StopHoverAnimation(Transform t, float duration = 0.3f)
     {
 
-        cardTransform.DOKill();
-        cardTransform.DOScale(1f, duration).SetEase(Ease.OutSine);
+        t.DOKill();
+        t.DOScale(1f, duration).SetEase(Ease.OutSine);
     }
 
 
@@ -254,7 +254,7 @@ public class AnimationHandler : MonoBehaviour
 
     public static void ResetCard(Transform t, float speed = 0.3f)
     {
-        t.DOKill();
+        t.DOKill(true);
 
         t.DOScale(1f, speed).SetEase(Ease.OutQuad);
 
