@@ -168,4 +168,16 @@ public class Card : Validatable, IPointerClickHandler, IPointerEnterHandler, IPo
 
     #endregion
 
+
+
+#if UNITY_EDITOR
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = cardSO.debugColor;
+        Gizmos.DrawCube(transform.position, new(.5f, .5f, .5f));
+    }
+
+
+#endif
+
 }

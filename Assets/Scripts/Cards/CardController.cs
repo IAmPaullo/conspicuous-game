@@ -5,9 +5,9 @@ using UnityEngine;
 
 public class CardController : MonoBehaviour
 {
-    private List<Card> selectedCards = new List<Card>();
+    private readonly List<Card> selectedCards = new();
+    private List<Card> allCards = new();
     [SerializeField] private int maxSelectedCards = 2;
-    private List<Card> allCards = new List<Card>();
     [SerializeField] private Transform cardHolder;
 
     public delegate void OnMatchFound(Card card1, Card card2);
@@ -24,13 +24,13 @@ public class CardController : MonoBehaviour
 
     public void SelectCard(Card card)
     {
-        
+
         if (!GameStateManager.Instance.CanSelectCard()) return;
 
         if (selectedCards.Count >= maxSelectedCards)
             return;
 
-       
+
         if (selectedCards.Contains(card))
         {
             selectedCards.Remove(card);
@@ -38,11 +38,11 @@ public class CardController : MonoBehaviour
             return;
         }
 
-        
+
         selectedCards.Add(card);
         card.Flip(true);
 
-       
+
         if (selectedCards.Count == maxSelectedCards)
         {
             CheckSelectedCards();
