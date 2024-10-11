@@ -16,6 +16,7 @@ public class CardController : MonoBehaviour
     public delegate void OnMatchFail(Card card1, Card card2);
     public event OnMatchFail MatchFailEvent;
 
+
     public void Initialize(List<Card> cards)
     {
         allCards = cards;
@@ -70,14 +71,14 @@ public class CardController : MonoBehaviour
     {
         card1.OnMatch();
         card2.OnMatch();
-        AnimationHandler.MatchSuccessAnimation(card1.transform, card2.transform);
+        GameAnimationHandler.MatchSuccessAnimation(card1.transform, card2.transform);
         MatchFoundEvent?.Invoke(card1, card2);
         ClearSelectedCards();
     }
 
     private void OnMismatch(Card card1, Card card2)
     {
-        AnimationHandler.MatchFailAnimation(card1.transform, card2.transform);
+        GameAnimationHandler.MatchFailAnimation(card1.transform, card2.transform);
         MatchFailEvent?.Invoke(card1, card2);
         StartCoroutine(FlipBackCards(card1, card2));
     }

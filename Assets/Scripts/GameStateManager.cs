@@ -18,6 +18,7 @@ public class GameStateManager : MonoBehaviour
     private int score = 0;
     private int matchPoints = 10;
     private int mismatchPenalty = 5;
+    public uint currentCombo;
 
     [SerializeField] private CardController cardController;
 

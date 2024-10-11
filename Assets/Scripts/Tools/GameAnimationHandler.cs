@@ -3,26 +3,17 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.UIElements.Experimental;
-using static UnityEngine.GraphicsBuffer;
 
-public class AnimationHandler : MonoBehaviour
+
+public class GameAnimationHandler : MonoBehaviour
 {
     public static Tween tween;
     //public static bool isTweening = tween.IsPlaying();
-    public AnimationHandler()
+    public GameAnimationHandler()
     {
         DOTween.Init();
-    }
-
-
-
-    public static void ShowCountdown()
-    {
-
     }
 
     public static void ColorObject(Image image, Color color, float endValue)
@@ -168,9 +159,6 @@ public class AnimationHandler : MonoBehaviour
 
     public static void MoveTogether(Transform t1, Transform t2, Transform finalPos, float speed = 0.5f, Ease easing = Ease.Linear)
     {
-
-        //TODO: FIX CARD ANIMATION NOT FLIPPING AFTER MERGE/MOVETOGETHER
-
 
         Vector3 middlePoint = (t1.position + t2.position) / 2;
 

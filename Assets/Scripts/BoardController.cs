@@ -7,6 +7,7 @@ using UnityEngine.UI;
 public class BoardController : MonoBehaviour
 {
     [SerializeField] private CardController cardController;
+    [SerializeField] private Countdown countdown;
     [SerializeField] private GameObject cardPrefab;
     [SerializeField] private Transform cardHolder;
     public Transform CardHolder => cardHolder;
@@ -88,32 +89,11 @@ public class BoardController : MonoBehaviour
         {
             card.Flip(false);
         }
-
-        yield return new WaitForSeconds(waitTime);
-        //Show go! AnimationHandler.ShowCountdown();
+        gridLayout.enabled = false;
+        yield return countdown.CountdownCoroutine();
         GameStateManager.Instance.SetGameState(GameStateManager.GameState.Playing);
 
     }
-
-
-
-    private void FlipAllCardsToFront()
-    {
-        foreach (var card in cards)
-        {
-            card.Flip(true);
-        }
-        StartCoroutine(WaitAndFlipBack());
-    }
-    private IEnumerator WaitAndFlipBack()
-    {
-        yield return new WaitForSeconds(waitTime);
-        foreach (var card in cards)
-        {
-            card.Flip(false);
-        }
-    }
-
 
 
 
@@ -160,10 +140,10 @@ public class BoardController : MonoBehaviour
             targets.Add(cardsOnBoard[i].transform);
         }
         positions.Shuffle();
-        await AnimationHandler.MoveAllToSinglePointAsync(targets, Vector3.zero, 0.04f);
+        await GameAnimationHandler.MoveAllToSinglePointAsync(targets, Vector3.zero, 0.04f);
         for (int i = 0; i < cardsOnBoard.Count; i++)
         {
-            await AnimationHandler.MoveToPositionAsync(cardsOnBoard[i].transform, positions[i], 0.1f);
+            await GameAnimationHandler.MoveToPositionAsync(cardsOnBoard[i].transform, positions[i], 0.1f);
         }
     }
     #endregion

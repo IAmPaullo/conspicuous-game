@@ -63,14 +63,14 @@ public class Card : Validatable, IPointerClickHandler, IPointerEnterHandler, IPo
     {
         if (!GameStateManager.Instance.CanSelectCard() || isSelected) return;
 
-        AnimationHandler.HoverCard(transform, true);
+        GameAnimationHandler.HoverCard(transform, true);
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
         if (!GameStateManager.Instance.CanSelectCard() /*|| isSelected*/) return;
 
-        AnimationHandler.HoverCard(transform, false);
+        GameAnimationHandler.HoverCard(transform, false);
     }
 
     #endregion
@@ -82,7 +82,7 @@ public class Card : Validatable, IPointerClickHandler, IPointerEnterHandler, IPo
 
         PlaySound(onClickAudio);
         Sprite targetSprite = showFront ? cardFrontside : cardBackside;
-        AnimationHandler.FlipCardWithImageChange(transform, imageRender, targetSprite, 0.35f);
+        GameAnimationHandler.FlipCardWithImageChange(transform, imageRender, targetSprite, 0.35f);
         isShowingFront = showFront;
         isSelected = showFront;
     }
