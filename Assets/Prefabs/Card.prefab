@@ -187,11 +187,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   imageRender: {fileID: 2571467163223396475}
   cardBackside: {fileID: 21300000, guid: 44dfe09a7eaefff4ba5d2caeb7ac78de, type: 3}
+  isShowingFront: 0
+  isEnabled: 0
+  isSelected: 0
+  isMatched: 0
   onClickAudio:
   - {fileID: 8300000, guid: 722f772db946b6741afef97fbd0777fb, type: 3}
   - {fileID: 8300000, guid: 2ebf2421dddc15a45b7fc6ae8197b1c0, type: 3}
+  - {fileID: 8300000, guid: c62d3e611dddc3d4b90ef668045225ff, type: 3}
+  onMatchAudio: {fileID: 8300000, guid: 383f2302fe1fae944994485f07d3a07b, type: 3}
+  onMissMatchAudio: {fileID: 8300000, guid: 6a7cae0a1312cc441b47187605fa458a, type: 3}
   audioSource: {fileID: 6397355668572332341}
-  disabledCardSound: {fileID: 0}
+  disabledCardSound: {fileID: 8300000, guid: fcf4dfedf17999a4893b7878c5fa2b41, type: 3}
 --- !u!222 &6980954298825787168
 CanvasRenderer:
   m_ObjectHideFlags: 0

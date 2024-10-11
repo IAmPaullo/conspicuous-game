@@ -25,6 +25,8 @@ public class Card : Validatable, IPointerClickHandler, IPointerEnterHandler, IPo
 
     [Header("Audio")]
     [SerializeField] private AudioClip[] onClickAudio;
+    [SerializeField] private AudioClip onMatchAudio;
+    [SerializeField] private AudioClip onMissMatchAudio;
     [SerializeField] private AudioSource audioSource;
     [SerializeField] private AudioClip disabledCardSound;
     private CardSO cardSO;
@@ -94,8 +96,14 @@ public class Card : Validatable, IPointerClickHandler, IPointerEnterHandler, IPo
         isEnabled = false;
         isSelected = false;
         isMatched = true;
+        PlaySound(onMatchAudio);
+    }
+    public void OnMissMatch()
+    {
+        PlaySound(onMissMatchAudio);
 
     }
+
 
     public void EnableCard()
     {

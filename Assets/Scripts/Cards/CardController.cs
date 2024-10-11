@@ -94,8 +94,11 @@ public class CardController : MonoBehaviour
     private void OnMismatch(Card card1, Card card2)
     {
         GameAnimationHandler.MatchFailAnimation(card1.transform, card2.transform);
+        card1.OnMissMatch();
+        card2.OnMissMatch();
         MatchFailEvent?.Invoke(card1, card2);
         StartCoroutine(FlipBackCards(card1, card2));
+
     }
 
     private IEnumerator FlipBackCards(Card card1, Card card2)

@@ -72,7 +72,6 @@ public class BoardController : MonoBehaviour
         for (int i = 0; i < cardsOnBoard.Count; i++)
         {
             cardsOnBoard[i].transform.SetParent(gridLayout.transform, false);
-            //cardsOnBoard[i].transform.localScale = Vector3.one;  
         }
     }
     private IEnumerator FlipToFrontsideThenBack()
