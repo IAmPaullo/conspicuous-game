@@ -3,18 +3,13 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 
 public class GameAnimationHandler : MonoBehaviour
 {
-    public static Tween tween;
-    //public static bool isTweening = tween.IsPlaying();
-    public GameAnimationHandler()
-    {
-        DOTween.Init();
-    }
 
     public static void ColorObject(Image image, Color color, float endValue)
     {
@@ -258,5 +253,37 @@ public class GameAnimationHandler : MonoBehaviour
 
 
     #endregion
+
+}
+
+public static class CountdownAnimator
+{
+
+    public static void Appear(GameObject g, float speed)
+    {
+
+        Sequence sequence = DOTween.Sequence();
+
+        if (!g.activeSelf)
+            g.SetActive(true);
+
+        g.TryGetComponent(out TextMeshProUGUI text);
+        sequence.Join(g.transform.DOScale(g.transform.localScale * 0.9f, speed));
+        sequence.Join(text?.DOFade(1f, speed));
+
+        sequence.Play().OnComplete(() => Disappear(g, speed));
+    }
+
+    public static void Disappear(GameObject g, float speed)
+    {
+        Sequence sequence = DOTween.Sequence();
+
+        g.TryGetComponent(out TextMeshProUGUI text);
+        sequence.Join(g.transform.DOScale(g.transform.localScale * 2f, speed));
+        sequence.Join(text.DOFade(0f, speed));
+
+        sequence.Play().OnComplete(() => g.SetActive(false));
+    }
+
 
 }

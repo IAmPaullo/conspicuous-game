@@ -1,6 +1,5 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class GameStateManager : MonoBehaviour
@@ -18,6 +17,8 @@ public class GameStateManager : MonoBehaviour
     private int score = 0;
     private int matchPoints = 10;
     private int mismatchPenalty = 5;
+
+
     public uint currentCombo;
 
     [SerializeField] private CardController cardController;
@@ -62,12 +63,14 @@ public class GameStateManager : MonoBehaviour
 
     private void OnMatchFound(Card card1, Card card2)
     {
-        AddScore(matchPoints);
+        currentCombo++;
+        AddScore(matchPoints * (int)currentCombo);
         StartCoroutine(WaitAndContinue(1f));
     }
 
     private void OnMatchFail(Card card1, Card card2)
     {
+        currentCombo = 0;
         SubtractScore(mismatchPenalty);
         StartCoroutine(WaitAndContinue(1f));
     }
