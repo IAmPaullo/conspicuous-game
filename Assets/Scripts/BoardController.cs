@@ -23,7 +23,7 @@ public class BoardController : MonoBehaviour
 
 
     private List<GameObject> cardsOnBoard = new();
-    private Dictionary<int, List<Card>> cardDictionary = new();
+
 
     [Header("Misc values")]
     [SerializeField, ReadOnly] private int maxMatches = 2;
