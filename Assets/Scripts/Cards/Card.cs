@@ -90,6 +90,7 @@ public class Card : Validatable, IPointerClickHandler, IPointerEnterHandler, IPo
     {
         isEnabled = false;
         isSelected = false;
+        isMatched = true;
 
     }
 
