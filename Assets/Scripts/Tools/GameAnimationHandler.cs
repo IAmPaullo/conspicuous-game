@@ -287,3 +287,25 @@ public static class CountdownAnimator
 
 
 }
+public static class ScoreAnimations
+{
+
+    public static void AnimateScoreChange(TextMeshProUGUI scoreText, int startScore, int endScore, Color changeColor, Color defaultColor, float duration, Action onComplete)
+    {
+
+        scoreText.DOColor(changeColor, duration / 2).OnComplete(() =>
+        {
+
+            scoreText.DOColor(defaultColor, duration / 2);
+        });
+
+
+        DOTween.To(() => startScore, x => scoreText.text = "Score: " + x, endScore, duration).OnComplete(() => onComplete?.Invoke());
+    }
+
+
+    public static void AnimateFinalScore(GameObject finalScorePanel, float duration)
+    {
+        finalScorePanel.transform.DOScale(1.2f, duration).From(0f).SetEase(Ease.OutBounce);
+    }
+}

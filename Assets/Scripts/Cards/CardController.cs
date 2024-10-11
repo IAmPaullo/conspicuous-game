@@ -7,7 +7,7 @@ public class CardController : MonoBehaviour
 {
     private readonly List<Card> selectedCards = new();
     private List<Card> allCards = new();
-    [SerializeField] private int maxSelectedCards = 2;
+    [SerializeField, ReadOnly] private int maxSelectedCards = 2;
     [SerializeField] private Transform cardHolder;
 
     public delegate void OnMatchFound(Card card1, Card card2);
@@ -74,6 +74,22 @@ public class CardController : MonoBehaviour
         GameAnimationHandler.MatchSuccessAnimation(card1.transform, card2.transform);
         MatchFoundEvent?.Invoke(card1, card2);
         ClearSelectedCards();
+
+        //End
+        if (AllCardsMatched())
+            GameStateManager.Instance.EndGame();
+    }
+
+    public bool AllCardsMatched()
+    {
+        int counter = 0;
+        for (int i = 0; i < allCards.Count; i++)
+        {
+            if (allCards[i].IsMatched)
+                counter++;
+        }
+        return counter >= allCards.Count;
+
     }
 
     private void OnMismatch(Card card1, Card card2)

@@ -14,9 +14,9 @@ public class GameStateManager : MonoBehaviour
     }
 
     private GameState currentState;
-    private int score = 0;
-    private int matchPoints = 10;
-    private int mismatchPenalty = 5;
+    [SerializeField, ReadOnly] private int score = 0;
+    [SerializeField] private int matchPoints = 10;
+    [SerializeField] private int mismatchPenalty = 5;
 
 
     public uint currentCombo;
@@ -40,7 +40,6 @@ public class GameStateManager : MonoBehaviour
     }
     private void Start()
     {
-
         cardController.MatchFoundEvent += OnMatchFound;
         cardController.MatchFailEvent += OnMatchFail;
     }
@@ -105,6 +104,8 @@ public class GameStateManager : MonoBehaviour
         SetGameState(GameState.GameOver);
         Debug.Log("Game Over! Score: " + score);
     }
+
+
 
     public void ResetGame()
     {

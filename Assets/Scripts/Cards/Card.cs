@@ -12,9 +12,11 @@ public class Card : Validatable, IPointerClickHandler, IPointerEnterHandler, IPo
     private BoardController boardController;
     private CardController cardController;
 
-    private bool isShowingFront;
-    private bool isEnabled;
-    private bool isSelected;
+    [SerializeField, ReadOnly] private bool isShowingFront;
+    [SerializeField, ReadOnly] private bool isEnabled;
+    [SerializeField, ReadOnly] private bool isSelected;
+    [SerializeField, ReadOnly] private bool isMatched;
+    public bool IsMatched => isMatched;
 
     public int ID => cardID;
 
@@ -24,8 +26,7 @@ public class Card : Validatable, IPointerClickHandler, IPointerEnterHandler, IPo
     [SerializeField] private AudioClip disabledCardSound;
     private CardSO cardSO;
 
-    [SerializeField] private Color selectedColor = Color.yellow;
-    [SerializeField] private float selectionAnimationScale = 1.2f;
+
 
     public void Init(BoardController boardController, CardController cardController, CardSO cardSO)
     {
@@ -47,13 +48,8 @@ public class Card : Validatable, IPointerClickHandler, IPointerEnterHandler, IPo
     {
         if (!GameStateManager.Instance.CanSelectCard()) return;
 
-        if (!isSelected)
+        if (isSelected)
         {
-            SelectCardVisualEffect(true);
-        }
-        else
-        {
-            SelectCardVisualEffect(false);
             PlaySound(disabledCardSound);
         }
         cardController.SelectCard(this);
@@ -77,9 +73,6 @@ public class Card : Validatable, IPointerClickHandler, IPointerEnterHandler, IPo
 
     public void Flip(bool showFront)
     {
-        //if (isSelected)
-        //    SelectCardVisualEffect(false);
-
         PlaySound(onClickAudio);
         Sprite targetSprite = showFront ? cardFrontside : cardBackside;
         GameAnimationHandler.FlipCardWithImageChange(transform, imageRender, targetSprite, 0.35f);
@@ -97,7 +90,7 @@ public class Card : Validatable, IPointerClickHandler, IPointerEnterHandler, IPo
     {
         isEnabled = false;
         isSelected = false;
-        SelectCardVisualEffect(false);
+
     }
 
     public void EnableCard()
@@ -128,23 +121,6 @@ public class Card : Validatable, IPointerClickHandler, IPointerEnterHandler, IPo
         audioSource.pitch = Random.value;
         audioSource.PlayOneShot(soundToPlay);
     }
-
-    public void SelectCardVisualEffect(bool selected)
-    {
-        isSelected = selected;
-
-        if (isSelected)
-        {
-            //AnimationHandler.StartHoverAnimation(transform, selectionAnimationScale);
-            //AnimationHandler.ColorObject(imageRender, selectedColor, 0.3f);
-        }
-        else
-        {
-            //AnimationHandler.StopHoverAnimation(transform);
-            //AnimationHandler.ColorObject(imageRender, Color.white, 0.3f);
-        }
-    }
-
 
     #region validate
     private void CheckDependencies()

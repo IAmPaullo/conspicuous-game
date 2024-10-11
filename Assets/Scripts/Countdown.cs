@@ -10,7 +10,6 @@ public class Countdown : Validatable
 {
     [Header("Configuration")]
     [SerializeField] private float tickDuration = default;
-    [SerializeField] private bool isPlaying = default;
     [Header("References")]
     [SerializeField] private Image background = default;
     [SerializeField] private GameObject numberOne = default;
@@ -54,9 +53,6 @@ public class Countdown : Validatable
         playAudio.Play();
 
         background.DOFade(0f, tickDuration).OnComplete(() => background.gameObject.SetActive(false));
-
-        isPlaying = false;
-
     }
 
     public void Restart()

@@ -29,12 +29,13 @@ public class BoardController : MonoBehaviour
 
     private void Start()
     {
-        CreateBoard(5, 4);
+        CreateBoard(2, 2);
     }
     public void CreateBoard(int rows, int columns)
     {
         List<CardSO> cardPool = GenerateCardPool(rows * columns);
         FillCards(cardPool);
+        cardController.Initialize(cards);
         AnimateCardsToGrid();
 
     }
@@ -95,6 +96,8 @@ public class BoardController : MonoBehaviour
 
     }
 
+
+    
 
 
     private void ClearBoard()
