@@ -20,3 +20,4 @@ MonoBehaviour:
 
 '
   sprite: {fileID: 21300000, guid: 45b96aab96433304a8dd459f35996197, type: 3}
+  debugColor: {r: 0.3461856, g: 0.061983235, b: 0.62911683, a: 1}
